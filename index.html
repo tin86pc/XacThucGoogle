@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+
+</head>
+
+<body onload="init()">
+    <div id="profile"></div>
+    <button id="logout-button" onclick="dangXuat()" style="display: none;">Đăng xuất</button>
+
+
+    <script>
+
+        //   https://console.cloud.google.com/welcome?hl=vi&project=oauth2-js
+
+
+        function init() {
+            google.accounts.id.initialize({
+                client_id: '925413746522-1dubd4c7mjkse42t5581hjd5rrfcccrg.apps.googleusercontent.com',
+                auto_select: true,
+                callback: xyLyDuLieu
+            })
+
+            google.accounts.id.prompt();
+
+        }
+
+        function xyLyDuLieu(response) {
+            if (response.credential) {
+                let jwt = response.credential
+                let user = JSON.parse(atob(jwt.split('.')[1]))
+                console.log('email người dùng: ' + user.email);
+
+                document.getElementById('profile').innerHTML = `
+                <h2>email: ${user.email}</h2> <br>
+                `
+                document.getElementById('logout-button').style.display = 'block'
+            }
+        }
+
+        function dangXuat() {
+            google.accounts.id.disableAutoSelect()
+            google.accounts.id.prompt()
+            document.getElementById('profile').innerHTML = ""
+            document.getElementById('logout-button').style.display = 'none'
+
+        }
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
